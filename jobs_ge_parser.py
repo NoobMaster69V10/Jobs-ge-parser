@@ -23,17 +23,9 @@ def add_info_to_db(quantity):
 
     it_category.click()
 
+    trs = driver.find_elements(By.XPATH, '//*[@id="job_list_table"]/tbody/tr')
+
     my_current_url = driver.current_url
-
-    response = requests.get(my_current_url)
-
-    soup = BeautifulSoup(response.content, 'html.parser')
-
-    table = soup.find('table', {'id': 'job_list_table'})
-
-    soup_2 = BeautifulSoup(str(table), 'html.parser')
-
-    trs = soup_2.find_all('tr')
 
     cycle_count = 0
     if quantity == 'all':
@@ -49,31 +41,17 @@ def add_info_to_db(quantity):
         name_btn = driver.find_element(By.XPATH, f'//*[@id="job_list_table"]/tbody/tr[{i}]/td[2]/a[1]')
         name_btn.click()
 
-        response = requests.get(driver.current_url)
+        name = driver.find_element(By.XPATH, '//*[@id="job"]/table/tbody/tr/td[1]/table[2]/tbody/tr[1]/td/b').text
 
-        soup = BeautifulSoup(response.content, 'html.parser')
+        description = driver.find_element(By.XPATH, '//*[@id="job"]/table/tbody/tr/td[1]/table[2]/tbody/tr[4]/td').text
 
-        table = soup.find('table', {'class': 'dtable'})
+        company = driver.find_element(By.XPATH, '//*[@id="job"]/table/tbody/tr/td[1]/table[2]/tbody/tr[2]/td/b').text
 
-        soup_2 = BeautifulSoup(str(table), 'html.parser')
+        date = driver.find_element(By.XPATH, '//*[@id="job"]/table/tbody/tr/td[1]/table[2]/tbody/tr[3]/td/b[1]').text
 
-        trs = soup_2.find_all('tr')
-        name = trs[0].td.b.text.strip()
+        deadline = driver.find_element(By.XPATH, '//*[@id="job"]/table/tbody/tr/td[1]/table[2]/tbody/tr[3]/td/b[2]').text
 
-        description = trs[3].td.text.strip()
-        if trs[1].td.b.a is None:
-            company = trs[1].td.b.text.strip()
-        else:
-            company = trs[1].td.b.a.text.strip()
-
-        date = trs[2].td.b.text.strip()
-
-        soup_3 = BeautifulSoup(str(trs[2]), 'html.parser')
-
-        bs = soup_3.find_all('b')
-        deadline = bs[1].text.strip()
-
-        description_2 = trs[3].td.text.strip().split(' ')
+        description_2 = description.split()
 
         salary = None
 
@@ -87,9 +65,9 @@ def add_info_to_db(quantity):
             else:
                 salary = None
 
-        for j in range(len(description_2)):
-            if '@' in description_2[j]:
-                email = description_2[j]
+        for e in description_2:
+            if '@' in e:
+                email = e
                 break
             else:
                 email = None
