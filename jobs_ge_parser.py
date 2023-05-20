@@ -1,11 +1,7 @@
 import time
-import requests
-from bs4 import BeautifulSoup
 from database import DataBase
 from job import Job
-
 from selenium import webdriver
-
 from selenium.webdriver.common.by import By
 
 
